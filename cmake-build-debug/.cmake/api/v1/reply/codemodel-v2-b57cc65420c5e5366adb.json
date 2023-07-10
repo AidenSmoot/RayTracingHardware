@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/aiden/School/Student/Masters/tinyRayTracer-main/cmake-build-debug",
-		"source" : "C:/Users/aiden/School/Student/Masters/tinyRayTracer-main"
+		"build" : "C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug",
+		"source" : "C:/Users/aiden/School/Student/Masters/tinyRayTracer"
 	},
 	"version" : 
 	{

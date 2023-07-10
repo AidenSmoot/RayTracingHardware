@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/aiden/School/Student/Masters/tinyRayTracer-main/cmake-build-debug"
+			"value" : "c:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -575,7 +575,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/aiden/School/Student/Masters/tinyRayTracer-main/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -647,7 +647,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/aiden/School/Student/Masters/tinyRayTracer-main"
+			"value" : "C:/Users/aiden/School/Student/Masters/tinyRayTracer"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1275,7 +1275,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/aiden/School/Student/Masters/tinyRayTracer-main/cmake-build-debug"
+			"value" : "C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug"
 		},
 		{
 			"name" : "tinyraytracer_IS_TOP_LEVEL",
@@ -1299,7 +1299,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/aiden/School/Student/Masters/tinyRayTracer-main"
+			"value" : "C:/Users/aiden/School/Student/Masters/tinyRayTracer"
 		}
 	],
 	"kind" : "cache",

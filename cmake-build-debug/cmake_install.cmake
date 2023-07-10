@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/aiden/School/Student/Masters/tinyRayTracer-main
+# Install script for directory: C:/Users/aiden/School/Student/Masters/tinyRayTracer
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/aiden/School/Student/Masters/tinyRayTracer-main/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

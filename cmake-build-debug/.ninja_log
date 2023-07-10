@@ -1,8 +1,6 @@
 # ninja log v5
-2	3648	7102788805497893	build.ninja	d07ae1f6fddfe5b9
-4	1260	7098562125675006	CMakeFiles/tinyraytracer.dir/tinyraytracer.cpp.obj	617dc9058fade6f2
-1261	1807	7098562131077418	tinyraytracer.exe	97da4fea0a88c8fa
-3	1896	7102790201844917	CMakeFiles/tinyraytracer.dir/tinyraytracer.cpp.obj	617dc9058fade6f2
-1897	2616	7102790208975393	tinyraytracer.exe	97da4fea0a88c8fa
+2	3648	7103609501218090	build.ninja	d07ae1f6fddfe5b9
 7	1476	7102791670816948	CMakeFiles/tinyraytracer.dir/tinyraytracer.cpp.obj	617dc9058fade6f2
 1476	2016	7102791676098214	tinyraytracer.exe	97da4fea0a88c8fa
+6	1850	7103614549523548	CMakeFiles/tinyraytracer.dir/tinyraytracer.cpp.obj	6ce21e0b89bbf44a
+1850	2585	7103614556814092	tinyraytracer.exe	97da4fea0a88c8fa
