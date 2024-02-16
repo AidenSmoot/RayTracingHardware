@@ -29,7 +29,7 @@ def writeCode (h, idx):
     if idx == 0: #check if root node
         file.write(f"Vec3f {prefixTree[leftChild]}dir = reflect(dir, {N}).normalize();\n")
         file.write(f"Vec3f {prefixTree[leftChild]}orig = {prefixTree[leftChild]}dir * {N} < 0 ? {pt} - {N}*1e-3 : {pt} + {N}*1e-3;\n")
-    elif leftChild < 2**(h+1) - 2: #only use if it is not a leaf node ( -2 because 0 indexed and there are 2^h - 1 nodes)
+    elif leftChild <= (2**(h+1)) - 2: #only use if it is not a leaf node ( -2 because 0 indexed and there are 2^h - 1 nodes)
         file.write(f"Vec3f {prefixTree[leftChild]}dir = reflect({currPrefix}dir, {N}).normalize();\n")
         file.write(f"Vec3f {prefixTree[leftChild]}orig = {prefixTree[leftChild]}dir * {N} < 0 ? {pt} - {N}*1e-3 : {pt} + {N}*1e-3;\n")
     file.write(f"Vec3f {prefixTree[leftChild]}Color;\n") 
@@ -40,7 +40,7 @@ def writeCode (h, idx):
     if idx == 0: #come back from reflect and set up the refract
         file.write(f"Vec3f {prefixTree[rightChild]}dir = refract(dir, {N}, {mat}.refractive_index).normalize();\n")
         file.write(f"Vec3f {prefixTree[rightChild]}orig = {prefixTree[rightChild]}dir * {N} < 0 ? {pt} - {N}*1e-3 : {pt} + {N}*1e-3;\n")
-    elif rightChild < 2**(h+1)-2: #only use if it is not a leaf node ( -2 because 0 indexed and there are 2^h - 1 nodes)
+    elif rightChild <= (2**(h+1))-2: #only use if it is not a leaf node ( -2 because 0 indexed and there are 2^h - 1 nodes)
         file.write(f"Vec3f {prefixTree[rightChild]}dir = refract({currPrefix}dir, {N}, {mat}.refractive_index).normalize();\n")
         file.write(f"Vec3f {prefixTree[rightChild]}orig = {prefixTree[rightChild]}dir * {N} < 0 ? {pt} - {N}*1e-3 : {pt} + {N}*1e-3;\n")
     file.write(f"Vec3f {prefixTree[rightChild]}Color;\n")
@@ -88,7 +88,7 @@ def writeTree(d):
         prefixTree[i] = prefixTree[(i-1)//2] + refract if i % 2 == 0 else prefixTree[(i-1)//2] + reflect #append reflect or refract to prefix depending on evenness of index
     return
 
-desiredDepth = 1 #set depth
+desiredDepth = 2 #set depth
 writeTree(desiredDepth)
 file.write("Vec3f background = Vec3f (.2,.7,.8);\n")
 writeCode(desiredDepth, 0) 
