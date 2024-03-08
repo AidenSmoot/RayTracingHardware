@@ -38,7 +38,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : " -Wall -Wextra -pedantic -std=c++11 -static -static-libgcc -static-libstdc++ -O3 -fopenmp -g -fdiagnostics-color=always"
+					"fragment" : " -Wall -Wextra -pedantic -std=c++11 -static -static-libgcc -static-libstdc++ -O0 -fopenmp -g -fdiagnostics-color=always"
 				}
 			],
 			"language" : "CXX",
@@ -54,7 +54,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-Wall -Wextra -pedantic -std=c++11 -static -static-libgcc -static-libstdc++ -O3 -fopenmp -g",
+				"fragment" : "-Wall -Wextra -pedantic -std=c++11 -static -static-libgcc -static-libstdc++ -O0 -fopenmp -g",
 				"role" : "flags"
 			},
 			{

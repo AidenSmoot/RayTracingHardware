@@ -47,11 +47,10 @@ def writeCode (h, idx):
     writeCode(h, rightChild) #call the right child after the color is initialized
     file.write("\n")
     file.write(f"///////////////////////////////////////////// Node {idx} /////////////////////////////////////////////\n")
-    file.write("\n")  
-    if idx == 2**(h)-1: #this corresponds to the bottom leftmost node in preorder traversal and can only initialize variable once
-        file.write("float diffuse_light_intensity = 0, specular_light_intensity = 0;\n")
-    else:
-        file.write("diffuse_light_intensity = 0, specular_light_intensity = 0;\n")
+    file.write("\n")
+    if idx != 0: #set condition to see if color is already set to background, if it is, skip section and only do if not root node
+        file.write(f"if(!({currPrefix}Color[0] == background[0] && {currPrefix}Color[1] == background[1] && {currPrefix}Color[2] == background[2])) {{\n")
+    file.write("float diffuse_light_intensity = 0, specular_light_intensity = 0;\n")
     file.write("for (size_t i = 0; i < lights.size(); i++) {\n") #perform lighting calculations
     file.write(f"   Vec3f light_dir = (lights[i].position - {pt}).normalize();\n")
     file.write(f"   float light_distance = (lights[i].position - {pt}).norm();\n")
@@ -75,6 +74,8 @@ def writeCode (h, idx):
     file.write(f"   Vec3f(1., 1., 1.) * specular_light_intensity * {mat}.albedo[1] + \n") #last lighting calculation
     file.write(f"   {prefixTree[leftChild]}Color * {mat}.albedo[2] + \n")
     file.write(f"   {prefixTree[rightChild]}Color * {mat}.albedo[3];\n")
+    if idx != 0: #closes the if condition on summation sections
+        file.write("}\n")
     return
 
 def writeTree(d):
@@ -88,7 +89,7 @@ def writeTree(d):
         prefixTree[i] = prefixTree[(i-1)//2] + refract if i % 2 == 0 else prefixTree[(i-1)//2] + reflect #append reflect or refract to prefix depending on evenness of index
     return
 
-desiredDepth = 2 #set depth
+desiredDepth = 3 #set depth
 writeTree(desiredDepth)
 file.write("Vec3f background = Vec3f (.2,.7,.8);\n")
 writeCode(desiredDepth, 0) 

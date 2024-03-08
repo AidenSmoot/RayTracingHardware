@@ -86,7 +86,7 @@ bool scene_intersect(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphe
     return std::min(spheres_dist, checkerboard_dist)<1000;
 }
 
-Vec3f cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &spheres, const std::vector<Light> &lights, size_t depth=0) {
+Vec3f cast_ray(size_t k, size_t j, const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &spheres, const std::vector<Light> &lights, size_t depth=0) {
     Vec3f background = Vec3f (.2,.7,.8);
 
 ///////////////////////////////////////////// Node 0 /////////////////////////////////////////////
@@ -118,40 +118,126 @@ Vec3f cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &s
     if (!scene_intersect(reflectreflectorig, reflectreflectdir, spheres, reflectreflectPoint, reflectreflectN, reflectreflectMaterial)) {
         reflectreflectColor = background;
     }
+    Vec3f reflectreflectreflectdir = reflect(reflectreflectdir, reflectreflectN).normalize();
+    Vec3f reflectreflectreflectorig = reflectreflectreflectdir * reflectreflectN < 0 ? reflectreflectPoint - reflectreflectN*1e-3 : reflectreflectPoint + reflectreflectN*1e-3;
     Vec3f reflectreflectreflectColor;
 
 ///////////////////////////////////////////// Node 7 /////////////////////////////////////////////
 
-    reflectreflectreflectColor = background;
+    Vec3f reflectreflectreflectPoint, reflectreflectreflectN;
+    Material reflectreflectreflectMaterial;
+    if (!scene_intersect(reflectreflectreflectorig, reflectreflectreflectdir, spheres, reflectreflectreflectPoint, reflectreflectreflectN, reflectreflectreflectMaterial)) {
+        reflectreflectreflectColor = background;
+    }
+    Vec3f reflectreflectreflectreflectColor;
+
+///////////////////////////////////////////// Node 15 /////////////////////////////////////////////
+
+    reflectreflectreflectreflectColor = background;
+
+///////////////////////////////////////////// Node 7 /////////////////////////////////////////////
+
+    Vec3f reflectreflectreflectrefractColor;
+
+///////////////////////////////////////////// Node 16 /////////////////////////////////////////////
+
+    reflectreflectreflectrefractColor = background;
+
+///////////////////////////////////////////// Node 7 /////////////////////////////////////////////
+
+    if(!(reflectreflectreflectColor[0] == background[0] && reflectreflectreflectColor[1] == background[1] && reflectreflectreflectColor[2] == background[2])) {
+        float diffuse_light_intensity = 0, specular_light_intensity = 0;
+        for (size_t i = 0; i < lights.size(); i++) {
+            Vec3f light_dir = (lights[i].position - reflectreflectreflectPoint).normalize();
+            float light_distance = (lights[i].position - reflectreflectreflectPoint).norm();
+
+            Vec3f shadow_orig = light_dir * reflectreflectreflectN < 0 ? reflectreflectreflectPoint - reflectreflectreflectN * 1e-3 : reflectreflectreflectPoint + reflectreflectreflectN * 1e-3;
+            Vec3f shadow_pt, shadow_N;
+            Material tmpmaterial;
+            if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
+                continue;
+
+            diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * reflectreflectreflectN);
+            specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, reflectreflectreflectN) * reflectreflectreflectdir), reflectreflectreflectMaterial.specular_exponent) * lights[i].intensity;
+        }
+        reflectreflectreflectColor = reflectreflectreflectMaterial.diffuse_color * diffuse_light_intensity * reflectreflectreflectMaterial.albedo[0] +
+                                     Vec3f(1., 1., 1.) * specular_light_intensity * reflectreflectreflectMaterial.albedo[1] +
+                                     reflectreflectreflectreflectColor * reflectreflectreflectMaterial.albedo[2] +
+                                     reflectreflectreflectrefractColor * reflectreflectreflectMaterial.albedo[3];
+    }
 
 ///////////////////////////////////////////// Node 3 /////////////////////////////////////////////
 
+    Vec3f reflectreflectrefractdir = refract(reflectreflectdir, reflectreflectN, reflectreflectMaterial.refractive_index).normalize();
+    Vec3f reflectreflectrefractorig = reflectreflectrefractdir * reflectreflectN < 0 ? reflectreflectPoint - reflectreflectN*1e-3 : reflectreflectPoint + reflectreflectN*1e-3;
     Vec3f reflectreflectrefractColor;
 
 ///////////////////////////////////////////// Node 8 /////////////////////////////////////////////
 
-    reflectreflectrefractColor = background;
+    Vec3f reflectreflectrefractPoint, reflectreflectrefractN;
+    Material reflectreflectrefractMaterial;
+    if (!scene_intersect(reflectreflectrefractorig, reflectreflectrefractdir, spheres, reflectreflectrefractPoint, reflectreflectrefractN, reflectreflectrefractMaterial)) {
+        reflectreflectrefractColor = background;
+    }
+    Vec3f reflectreflectrefractreflectColor;
+
+///////////////////////////////////////////// Node 17 /////////////////////////////////////////////
+
+    reflectreflectrefractreflectColor = background;
+
+///////////////////////////////////////////// Node 8 /////////////////////////////////////////////
+
+    Vec3f reflectreflectrefractrefractColor;
+
+///////////////////////////////////////////// Node 18 /////////////////////////////////////////////
+
+    reflectreflectrefractrefractColor = background;
+
+///////////////////////////////////////////// Node 8 /////////////////////////////////////////////
+
+    if(!(reflectreflectrefractColor[0] == background[0] && reflectreflectrefractColor[1] == background[1] && reflectreflectrefractColor[2] == background[2])) {
+        float diffuse_light_intensity = 0, specular_light_intensity = 0;
+        for (size_t i = 0; i < lights.size(); i++) {
+            Vec3f light_dir = (lights[i].position - reflectreflectrefractPoint).normalize();
+            float light_distance = (lights[i].position - reflectreflectrefractPoint).norm();
+
+            Vec3f shadow_orig = light_dir * reflectreflectrefractN < 0 ? reflectreflectrefractPoint - reflectreflectrefractN * 1e-3 : reflectreflectrefractPoint + reflectreflectrefractN * 1e-3;
+            Vec3f shadow_pt, shadow_N;
+            Material tmpmaterial;
+            if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
+                continue;
+
+            diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * reflectreflectrefractN);
+            specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, reflectreflectrefractN) * reflectreflectrefractdir), reflectreflectrefractMaterial.specular_exponent) * lights[i].intensity;
+        }
+        reflectreflectrefractColor = reflectreflectrefractMaterial.diffuse_color * diffuse_light_intensity * reflectreflectrefractMaterial.albedo[0] +
+                                     Vec3f(1., 1., 1.) * specular_light_intensity * reflectreflectrefractMaterial.albedo[1] +
+                                     reflectreflectrefractreflectColor * reflectreflectrefractMaterial.albedo[2] +
+                                     reflectreflectrefractrefractColor * reflectreflectrefractMaterial.albedo[3];
+    }
 
 ///////////////////////////////////////////// Node 3 /////////////////////////////////////////////
 
-    float diffuse_light_intensity = 0, specular_light_intensity = 0;
-    for (size_t i = 0; i < lights.size(); i++) {
-        Vec3f light_dir = (lights[i].position - reflectreflectPoint).normalize();
-        float light_distance = (lights[i].position - reflectreflectPoint).norm();
+    if(!(reflectreflectColor[0] == background[0] && reflectreflectColor[1] == background[1] && reflectreflectColor[2] == background[2])) {
+        float diffuse_light_intensity = 0, specular_light_intensity = 0;
+        for (size_t i = 0; i < lights.size(); i++) {
+            Vec3f light_dir = (lights[i].position - reflectreflectPoint).normalize();
+            float light_distance = (lights[i].position - reflectreflectPoint).norm();
 
-        Vec3f shadow_orig = light_dir * reflectreflectN < 0 ? reflectreflectPoint - reflectreflectN * 1e-3 : reflectreflectPoint + reflectreflectN * 1e-3;
-        Vec3f shadow_pt, shadow_N;
-        Material tmpmaterial;
-        if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
-            continue;
+            Vec3f shadow_orig = light_dir * reflectreflectN < 0 ? reflectreflectPoint - reflectreflectN * 1e-3 : reflectreflectPoint + reflectreflectN * 1e-3;
+            Vec3f shadow_pt, shadow_N;
+            Material tmpmaterial;
+            if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
+                continue;
 
-        diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * reflectreflectN);
-        specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, reflectreflectN) * reflectreflectdir), reflectreflectMaterial.specular_exponent) * lights[i].intensity;
+            diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * reflectreflectN);
+            specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, reflectreflectN) * reflectreflectdir), reflectreflectMaterial.specular_exponent) * lights[i].intensity;
+        }
+        reflectreflectColor = reflectreflectMaterial.diffuse_color * diffuse_light_intensity * reflectreflectMaterial.albedo[0] +
+                              Vec3f(1., 1., 1.) * specular_light_intensity * reflectreflectMaterial.albedo[1] +
+                              reflectreflectreflectColor * reflectreflectMaterial.albedo[2] +
+                              reflectreflectrefractColor * reflectreflectMaterial.albedo[3];
     }
-    reflectreflectColor = reflectreflectMaterial.diffuse_color * diffuse_light_intensity * reflectreflectMaterial.albedo[0] +
-                          Vec3f(1., 1., 1.) * specular_light_intensity * reflectreflectMaterial.albedo[1] +
-                          reflectreflectreflectColor * reflectreflectMaterial.albedo[2] +
-                          reflectreflectrefractColor * reflectreflectMaterial.albedo[3];
 
 ///////////////////////////////////////////// Node 1 /////////////////////////////////////////////
 
@@ -166,61 +252,149 @@ Vec3f cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &s
     if (!scene_intersect(reflectrefractorig, reflectrefractdir, spheres, reflectrefractPoint, reflectrefractN, reflectrefractMaterial)) {
         reflectrefractColor = background;
     }
+    Vec3f reflectrefractreflectdir = reflect(reflectrefractdir, reflectrefractN).normalize();
+    Vec3f reflectrefractreflectorig = reflectrefractreflectdir * reflectrefractN < 0 ? reflectrefractPoint - reflectrefractN*1e-3 : reflectrefractPoint + reflectrefractN*1e-3;
     Vec3f reflectrefractreflectColor;
 
 ///////////////////////////////////////////// Node 9 /////////////////////////////////////////////
 
-    reflectrefractreflectColor = background;
+    Vec3f reflectrefractreflectPoint, reflectrefractreflectN;
+    Material reflectrefractreflectMaterial;
+    if (!scene_intersect(reflectrefractreflectorig, reflectrefractreflectdir, spheres, reflectrefractreflectPoint, reflectrefractreflectN, reflectrefractreflectMaterial)) {
+        reflectrefractreflectColor = background;
+    }
+    Vec3f reflectrefractreflectreflectColor;
+
+///////////////////////////////////////////// Node 19 /////////////////////////////////////////////
+
+    reflectrefractreflectreflectColor = background;
+
+///////////////////////////////////////////// Node 9 /////////////////////////////////////////////
+
+    Vec3f reflectrefractreflectrefractColor;
+
+///////////////////////////////////////////// Node 20 /////////////////////////////////////////////
+
+    reflectrefractreflectrefractColor = background;
+
+///////////////////////////////////////////// Node 9 /////////////////////////////////////////////
+
+    if(!(reflectrefractreflectColor[0] == background[0] && reflectrefractreflectColor[1] == background[1] && reflectrefractreflectColor[2] == background[2])) {
+        float diffuse_light_intensity = 0, specular_light_intensity = 0;
+        for (size_t i = 0; i < lights.size(); i++) {
+            Vec3f light_dir = (lights[i].position - reflectrefractreflectPoint).normalize();
+            float light_distance = (lights[i].position - reflectrefractreflectPoint).norm();
+
+            Vec3f shadow_orig = light_dir * reflectrefractreflectN < 0 ? reflectrefractreflectPoint - reflectrefractreflectN * 1e-3 : reflectrefractreflectPoint + reflectrefractreflectN * 1e-3;
+            Vec3f shadow_pt, shadow_N;
+            Material tmpmaterial;
+            if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
+                continue;
+
+            diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * reflectrefractreflectN);
+            specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, reflectrefractreflectN) * reflectrefractreflectdir), reflectrefractreflectMaterial.specular_exponent) * lights[i].intensity;
+        }
+        reflectrefractreflectColor = reflectrefractreflectMaterial.diffuse_color * diffuse_light_intensity * reflectrefractreflectMaterial.albedo[0] +
+                                     Vec3f(1., 1., 1.) * specular_light_intensity * reflectrefractreflectMaterial.albedo[1] +
+                                     reflectrefractreflectreflectColor * reflectrefractreflectMaterial.albedo[2] +
+                                     reflectrefractreflectrefractColor * reflectrefractreflectMaterial.albedo[3];
+    }
 
 ///////////////////////////////////////////// Node 4 /////////////////////////////////////////////
 
+    Vec3f reflectrefractrefractdir = refract(reflectrefractdir, reflectrefractN, reflectrefractMaterial.refractive_index).normalize();
+    Vec3f reflectrefractrefractorig = reflectrefractrefractdir * reflectrefractN < 0 ? reflectrefractPoint - reflectrefractN*1e-3 : reflectrefractPoint + reflectrefractN*1e-3;
     Vec3f reflectrefractrefractColor;
 
 ///////////////////////////////////////////// Node 10 /////////////////////////////////////////////
 
-    reflectrefractrefractColor = background;
+    Vec3f reflectrefractrefractPoint, reflectrefractrefractN;
+    Material reflectrefractrefractMaterial;
+    if (!scene_intersect(reflectrefractrefractorig, reflectrefractrefractdir, spheres, reflectrefractrefractPoint, reflectrefractrefractN, reflectrefractrefractMaterial)) {
+        reflectrefractrefractColor = background;
+    }
+    Vec3f reflectrefractrefractreflectColor;
+
+///////////////////////////////////////////// Node 21 /////////////////////////////////////////////
+
+    reflectrefractrefractreflectColor = background;
+
+///////////////////////////////////////////// Node 10 /////////////////////////////////////////////
+
+    Vec3f reflectrefractrefractrefractColor;
+
+///////////////////////////////////////////// Node 22 /////////////////////////////////////////////
+
+    reflectrefractrefractrefractColor = background;
+
+///////////////////////////////////////////// Node 10 /////////////////////////////////////////////
+
+    if(!(reflectrefractrefractColor[0] == background[0] && reflectrefractrefractColor[1] == background[1] && reflectrefractrefractColor[2] == background[2])) {
+        float diffuse_light_intensity = 0, specular_light_intensity = 0;
+        for (size_t i = 0; i < lights.size(); i++) {
+            Vec3f light_dir = (lights[i].position - reflectrefractrefractPoint).normalize();
+            float light_distance = (lights[i].position - reflectrefractrefractPoint).norm();
+
+            Vec3f shadow_orig = light_dir * reflectrefractrefractN < 0 ? reflectrefractrefractPoint - reflectrefractrefractN * 1e-3 : reflectrefractrefractPoint + reflectrefractrefractN * 1e-3;
+            Vec3f shadow_pt, shadow_N;
+            Material tmpmaterial;
+            if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
+                continue;
+
+            diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * reflectrefractrefractN);
+            specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, reflectrefractrefractN) * reflectrefractrefractdir), reflectrefractrefractMaterial.specular_exponent) * lights[i].intensity;
+        }
+        reflectrefractrefractColor = reflectrefractrefractMaterial.diffuse_color * diffuse_light_intensity * reflectrefractrefractMaterial.albedo[0] +
+                                     Vec3f(1., 1., 1.) * specular_light_intensity * reflectrefractrefractMaterial.albedo[1] +
+                                     reflectrefractrefractreflectColor * reflectrefractrefractMaterial.albedo[2] +
+                                     reflectrefractrefractrefractColor * reflectrefractrefractMaterial.albedo[3];
+    }
 
 ///////////////////////////////////////////// Node 4 /////////////////////////////////////////////
 
-    diffuse_light_intensity = 0, specular_light_intensity = 0;
-    for (size_t i = 0; i < lights.size(); i++) {
-        Vec3f light_dir = (lights[i].position - reflectrefractPoint).normalize();
-        float light_distance = (lights[i].position - reflectrefractPoint).norm();
+    if(!(reflectrefractColor[0] == background[0] && reflectrefractColor[1] == background[1] && reflectrefractColor[2] == background[2])) {
+        float diffuse_light_intensity = 0, specular_light_intensity = 0;
+        for (size_t i = 0; i < lights.size(); i++) {
+            Vec3f light_dir = (lights[i].position - reflectrefractPoint).normalize();
+            float light_distance = (lights[i].position - reflectrefractPoint).norm();
 
-        Vec3f shadow_orig = light_dir * reflectrefractN < 0 ? reflectrefractPoint - reflectrefractN * 1e-3 : reflectrefractPoint + reflectrefractN * 1e-3;
-        Vec3f shadow_pt, shadow_N;
-        Material tmpmaterial;
-        if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
-            continue;
+            Vec3f shadow_orig = light_dir * reflectrefractN < 0 ? reflectrefractPoint - reflectrefractN * 1e-3 : reflectrefractPoint + reflectrefractN * 1e-3;
+            Vec3f shadow_pt, shadow_N;
+            Material tmpmaterial;
+            if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
+                continue;
 
-        diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * reflectrefractN);
-        specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, reflectrefractN) * reflectrefractdir), reflectrefractMaterial.specular_exponent) * lights[i].intensity;
+            diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * reflectrefractN);
+            specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, reflectrefractN) * reflectrefractdir), reflectrefractMaterial.specular_exponent) * lights[i].intensity;
+        }
+        reflectrefractColor = reflectrefractMaterial.diffuse_color * diffuse_light_intensity * reflectrefractMaterial.albedo[0] +
+                              Vec3f(1., 1., 1.) * specular_light_intensity * reflectrefractMaterial.albedo[1] +
+                              reflectrefractreflectColor * reflectrefractMaterial.albedo[2] +
+                              reflectrefractrefractColor * reflectrefractMaterial.albedo[3];
     }
-    reflectrefractColor = reflectrefractMaterial.diffuse_color * diffuse_light_intensity * reflectrefractMaterial.albedo[0] +
-                          Vec3f(1., 1., 1.) * specular_light_intensity * reflectrefractMaterial.albedo[1] +
-                          reflectrefractreflectColor * reflectrefractMaterial.albedo[2] +
-                          reflectrefractrefractColor * reflectrefractMaterial.albedo[3];
 
 ///////////////////////////////////////////// Node 1 /////////////////////////////////////////////
 
-    diffuse_light_intensity = 0, specular_light_intensity = 0;
-    for (size_t i = 0; i < lights.size(); i++) {
-        Vec3f light_dir = (lights[i].position - reflectPoint).normalize();
-        float light_distance = (lights[i].position - reflectPoint).norm();
+    if(!(reflectColor[0] == background[0] && reflectColor[1] == background[1] && reflectColor[2] == background[2])) {
+        float diffuse_light_intensity = 0, specular_light_intensity = 0;
+        for (size_t i = 0; i < lights.size(); i++) {
+            Vec3f light_dir = (lights[i].position - reflectPoint).normalize();
+            float light_distance = (lights[i].position - reflectPoint).norm();
 
-        Vec3f shadow_orig = light_dir * reflectN < 0 ? reflectPoint - reflectN * 1e-3 : reflectPoint + reflectN * 1e-3;
-        Vec3f shadow_pt, shadow_N;
-        Material tmpmaterial;
-        if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
-            continue;
+            Vec3f shadow_orig = light_dir * reflectN < 0 ? reflectPoint - reflectN * 1e-3 : reflectPoint + reflectN * 1e-3;
+            Vec3f shadow_pt, shadow_N;
+            Material tmpmaterial;
+            if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
+                continue;
 
-        diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * reflectN);
-        specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, reflectN) * reflectdir), reflectMaterial.specular_exponent) * lights[i].intensity;
+            diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * reflectN);
+            specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, reflectN) * reflectdir), reflectMaterial.specular_exponent) * lights[i].intensity;
+        }
+        reflectColor = reflectMaterial.diffuse_color * diffuse_light_intensity * reflectMaterial.albedo[0] +
+                       Vec3f(1., 1., 1.) * specular_light_intensity * reflectMaterial.albedo[1] +
+                       reflectreflectColor * reflectMaterial.albedo[2] +
+                       reflectrefractColor * reflectMaterial.albedo[3];
     }
-    reflectColor = reflectMaterial.diffuse_color * diffuse_light_intensity * reflectMaterial.albedo[0] +
-                   Vec3f(1., 1., 1.) * specular_light_intensity * reflectMaterial.albedo[1] +
-                   reflectreflectColor * reflectMaterial.albedo[2] +
-                   reflectrefractColor * reflectMaterial.albedo[3];
 
 ///////////////////////////////////////////// Node 0 /////////////////////////////////////////////
 
@@ -246,40 +420,126 @@ Vec3f cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &s
     if (!scene_intersect(refractreflectorig, refractreflectdir, spheres, refractreflectPoint, refractreflectN, refractreflectMaterial)) {
         refractreflectColor = background;
     }
+    Vec3f refractreflectreflectdir = reflect(refractreflectdir, refractreflectN).normalize();
+    Vec3f refractreflectreflectorig = refractreflectreflectdir * refractreflectN < 0 ? refractreflectPoint - refractreflectN*1e-3 : refractreflectPoint + refractreflectN*1e-3;
     Vec3f refractreflectreflectColor;
 
 ///////////////////////////////////////////// Node 11 /////////////////////////////////////////////
 
-    refractreflectreflectColor = background;
+    Vec3f refractreflectreflectPoint, refractreflectreflectN;
+    Material refractreflectreflectMaterial;
+    if (!scene_intersect(refractreflectreflectorig, refractreflectreflectdir, spheres, refractreflectreflectPoint, refractreflectreflectN, refractreflectreflectMaterial)) {
+        refractreflectreflectColor = background;
+    }
+    Vec3f refractreflectreflectreflectColor;
+
+///////////////////////////////////////////// Node 23 /////////////////////////////////////////////
+
+    refractreflectreflectreflectColor = background;
+
+///////////////////////////////////////////// Node 11 /////////////////////////////////////////////
+
+    Vec3f refractreflectreflectrefractColor;
+
+///////////////////////////////////////////// Node 24 /////////////////////////////////////////////
+
+    refractreflectreflectrefractColor = background;
+
+///////////////////////////////////////////// Node 11 /////////////////////////////////////////////
+
+    if(!(refractreflectreflectColor[0] == background[0] && refractreflectreflectColor[1] == background[1] && refractreflectreflectColor[2] == background[2])) {
+        float diffuse_light_intensity = 0, specular_light_intensity = 0;
+        for (size_t i = 0; i < lights.size(); i++) {
+            Vec3f light_dir = (lights[i].position - refractreflectreflectPoint).normalize();
+            float light_distance = (lights[i].position - refractreflectreflectPoint).norm();
+
+            Vec3f shadow_orig = light_dir * refractreflectreflectN < 0 ? refractreflectreflectPoint - refractreflectreflectN * 1e-3 : refractreflectreflectPoint + refractreflectreflectN * 1e-3;
+            Vec3f shadow_pt, shadow_N;
+            Material tmpmaterial;
+            if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
+                continue;
+
+            diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * refractreflectreflectN);
+            specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, refractreflectreflectN) * refractreflectreflectdir), refractreflectreflectMaterial.specular_exponent) * lights[i].intensity;
+        }
+        refractreflectreflectColor = refractreflectreflectMaterial.diffuse_color * diffuse_light_intensity * refractreflectreflectMaterial.albedo[0] +
+                                     Vec3f(1., 1., 1.) * specular_light_intensity * refractreflectreflectMaterial.albedo[1] +
+                                     refractreflectreflectreflectColor * refractreflectreflectMaterial.albedo[2] +
+                                     refractreflectreflectrefractColor * refractreflectreflectMaterial.albedo[3];
+    }
 
 ///////////////////////////////////////////// Node 5 /////////////////////////////////////////////
 
+    Vec3f refractreflectrefractdir = refract(refractreflectdir, refractreflectN, refractreflectMaterial.refractive_index).normalize();
+    Vec3f refractreflectrefractorig = refractreflectrefractdir * refractreflectN < 0 ? refractreflectPoint - refractreflectN*1e-3 : refractreflectPoint + refractreflectN*1e-3;
     Vec3f refractreflectrefractColor;
 
 ///////////////////////////////////////////// Node 12 /////////////////////////////////////////////
 
-    refractreflectrefractColor = background;
+    Vec3f refractreflectrefractPoint, refractreflectrefractN;
+    Material refractreflectrefractMaterial;
+    if (!scene_intersect(refractreflectrefractorig, refractreflectrefractdir, spheres, refractreflectrefractPoint, refractreflectrefractN, refractreflectrefractMaterial)) {
+        refractreflectrefractColor = background;
+    }
+    Vec3f refractreflectrefractreflectColor;
+
+///////////////////////////////////////////// Node 25 /////////////////////////////////////////////
+
+    refractreflectrefractreflectColor = background;
+
+///////////////////////////////////////////// Node 12 /////////////////////////////////////////////
+
+    Vec3f refractreflectrefractrefractColor;
+
+///////////////////////////////////////////// Node 26 /////////////////////////////////////////////
+
+    refractreflectrefractrefractColor = background;
+
+///////////////////////////////////////////// Node 12 /////////////////////////////////////////////
+
+    if(!(refractreflectrefractColor[0] == background[0] && refractreflectrefractColor[1] == background[1] && refractreflectrefractColor[2] == background[2])) {
+        float diffuse_light_intensity = 0, specular_light_intensity = 0;
+        for (size_t i = 0; i < lights.size(); i++) {
+            Vec3f light_dir = (lights[i].position - refractreflectrefractPoint).normalize();
+            float light_distance = (lights[i].position - refractreflectrefractPoint).norm();
+
+            Vec3f shadow_orig = light_dir * refractreflectrefractN < 0 ? refractreflectrefractPoint - refractreflectrefractN * 1e-3 : refractreflectrefractPoint + refractreflectrefractN * 1e-3;
+            Vec3f shadow_pt, shadow_N;
+            Material tmpmaterial;
+            if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
+                continue;
+
+            diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * refractreflectrefractN);
+            specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, refractreflectrefractN) * refractreflectrefractdir), refractreflectrefractMaterial.specular_exponent) * lights[i].intensity;
+        }
+        refractreflectrefractColor = refractreflectrefractMaterial.diffuse_color * diffuse_light_intensity * refractreflectrefractMaterial.albedo[0] +
+                                     Vec3f(1., 1., 1.) * specular_light_intensity * refractreflectrefractMaterial.albedo[1] +
+                                     refractreflectrefractreflectColor * refractreflectrefractMaterial.albedo[2] +
+                                     refractreflectrefractrefractColor * refractreflectrefractMaterial.albedo[3];
+    }
 
 ///////////////////////////////////////////// Node 5 /////////////////////////////////////////////
 
-    diffuse_light_intensity = 0, specular_light_intensity = 0;
-    for (size_t i = 0; i < lights.size(); i++) {
-        Vec3f light_dir = (lights[i].position - refractreflectPoint).normalize();
-        float light_distance = (lights[i].position - refractreflectPoint).norm();
+    if(!(refractreflectColor[0] == background[0] && refractreflectColor[1] == background[1] && refractreflectColor[2] == background[2])) {
+        float diffuse_light_intensity = 0, specular_light_intensity = 0;
+        for (size_t i = 0; i < lights.size(); i++) {
+            Vec3f light_dir = (lights[i].position - refractreflectPoint).normalize();
+            float light_distance = (lights[i].position - refractreflectPoint).norm();
 
-        Vec3f shadow_orig = light_dir * refractreflectN < 0 ? refractreflectPoint - refractreflectN * 1e-3 : refractreflectPoint + refractreflectN * 1e-3;
-        Vec3f shadow_pt, shadow_N;
-        Material tmpmaterial;
-        if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
-            continue;
+            Vec3f shadow_orig = light_dir * refractreflectN < 0 ? refractreflectPoint - refractreflectN * 1e-3 : refractreflectPoint + refractreflectN * 1e-3;
+            Vec3f shadow_pt, shadow_N;
+            Material tmpmaterial;
+            if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
+                continue;
 
-        diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * refractreflectN);
-        specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, refractreflectN) * refractreflectdir), refractreflectMaterial.specular_exponent) * lights[i].intensity;
+            diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * refractreflectN);
+            specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, refractreflectN) * refractreflectdir), refractreflectMaterial.specular_exponent) * lights[i].intensity;
+        }
+        refractreflectColor = refractreflectMaterial.diffuse_color * diffuse_light_intensity * refractreflectMaterial.albedo[0] +
+                              Vec3f(1., 1., 1.) * specular_light_intensity * refractreflectMaterial.albedo[1] +
+                              refractreflectreflectColor * refractreflectMaterial.albedo[2] +
+                              refractreflectrefractColor * refractreflectMaterial.albedo[3];
     }
-    refractreflectColor = refractreflectMaterial.diffuse_color * diffuse_light_intensity * refractreflectMaterial.albedo[0] +
-                          Vec3f(1., 1., 1.) * specular_light_intensity * refractreflectMaterial.albedo[1] +
-                          refractreflectreflectColor * refractreflectMaterial.albedo[2] +
-                          refractreflectrefractColor * refractreflectMaterial.albedo[3];
 
 ///////////////////////////////////////////// Node 2 /////////////////////////////////////////////
 
@@ -294,65 +554,153 @@ Vec3f cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &s
     if (!scene_intersect(refractrefractorig, refractrefractdir, spheres, refractrefractPoint, refractrefractN, refractrefractMaterial)) {
         refractrefractColor = background;
     }
+    Vec3f refractrefractreflectdir = reflect(refractrefractdir, refractrefractN).normalize();
+    Vec3f refractrefractreflectorig = refractrefractreflectdir * refractrefractN < 0 ? refractrefractPoint - refractrefractN*1e-3 : refractrefractPoint + refractrefractN*1e-3;
     Vec3f refractrefractreflectColor;
 
 ///////////////////////////////////////////// Node 13 /////////////////////////////////////////////
 
-    refractrefractreflectColor = background;
+    Vec3f refractrefractreflectPoint, refractrefractreflectN;
+    Material refractrefractreflectMaterial;
+    if (!scene_intersect(refractrefractreflectorig, refractrefractreflectdir, spheres, refractrefractreflectPoint, refractrefractreflectN, refractrefractreflectMaterial)) {
+        refractrefractreflectColor = background;
+    }
+    Vec3f refractrefractreflectreflectColor;
+
+///////////////////////////////////////////// Node 27 /////////////////////////////////////////////
+
+    refractrefractreflectreflectColor = background;
+
+///////////////////////////////////////////// Node 13 /////////////////////////////////////////////
+
+    Vec3f refractrefractreflectrefractColor;
+
+///////////////////////////////////////////// Node 28 /////////////////////////////////////////////
+
+    refractrefractreflectrefractColor = background;
+
+///////////////////////////////////////////// Node 13 /////////////////////////////////////////////
+
+    if(!(refractrefractreflectColor[0] == background[0] && refractrefractreflectColor[1] == background[1] && refractrefractreflectColor[2] == background[2])) {
+        float diffuse_light_intensity = 0, specular_light_intensity = 0;
+        for (size_t i = 0; i < lights.size(); i++) {
+            Vec3f light_dir = (lights[i].position - refractrefractreflectPoint).normalize();
+            float light_distance = (lights[i].position - refractrefractreflectPoint).norm();
+
+            Vec3f shadow_orig = light_dir * refractrefractreflectN < 0 ? refractrefractreflectPoint - refractrefractreflectN * 1e-3 : refractrefractreflectPoint + refractrefractreflectN * 1e-3;
+            Vec3f shadow_pt, shadow_N;
+            Material tmpmaterial;
+            if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
+                continue;
+
+            diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * refractrefractreflectN);
+            specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, refractrefractreflectN) * refractrefractreflectdir), refractrefractreflectMaterial.specular_exponent) * lights[i].intensity;
+        }
+        refractrefractreflectColor = refractrefractreflectMaterial.diffuse_color * diffuse_light_intensity * refractrefractreflectMaterial.albedo[0] +
+                                     Vec3f(1., 1., 1.) * specular_light_intensity * refractrefractreflectMaterial.albedo[1] +
+                                     refractrefractreflectreflectColor * refractrefractreflectMaterial.albedo[2] +
+                                     refractrefractreflectrefractColor * refractrefractreflectMaterial.albedo[3];
+    }
 
 ///////////////////////////////////////////// Node 6 /////////////////////////////////////////////
 
+    Vec3f refractrefractrefractdir = refract(refractrefractdir, refractrefractN, refractrefractMaterial.refractive_index).normalize();
+    Vec3f refractrefractrefractorig = refractrefractrefractdir * refractrefractN < 0 ? refractrefractPoint - refractrefractN*1e-3 : refractrefractPoint + refractrefractN*1e-3;
     Vec3f refractrefractrefractColor;
 
 ///////////////////////////////////////////// Node 14 /////////////////////////////////////////////
 
-    refractrefractrefractColor = background;
+    Vec3f refractrefractrefractPoint, refractrefractrefractN;
+    Material refractrefractrefractMaterial;
+    if (!scene_intersect(refractrefractrefractorig, refractrefractrefractdir, spheres, refractrefractrefractPoint, refractrefractrefractN, refractrefractrefractMaterial)) {
+        refractrefractrefractColor = background;
+    }
+    Vec3f refractrefractrefractreflectColor;
+
+///////////////////////////////////////////// Node 29 /////////////////////////////////////////////
+
+    refractrefractrefractreflectColor = background;
+
+///////////////////////////////////////////// Node 14 /////////////////////////////////////////////
+
+    Vec3f refractrefractrefractrefractColor;
+
+///////////////////////////////////////////// Node 30 /////////////////////////////////////////////
+
+    refractrefractrefractrefractColor = background;
+
+///////////////////////////////////////////// Node 14 /////////////////////////////////////////////
+
+    if(!(refractrefractrefractColor[0] == background[0] && refractrefractrefractColor[1] == background[1] && refractrefractrefractColor[2] == background[2])) {
+        float diffuse_light_intensity = 0, specular_light_intensity = 0;
+        for (size_t i = 0; i < lights.size(); i++) {
+            Vec3f light_dir = (lights[i].position - refractrefractrefractPoint).normalize();
+            float light_distance = (lights[i].position - refractrefractrefractPoint).norm();
+
+            Vec3f shadow_orig = light_dir * refractrefractrefractN < 0 ? refractrefractrefractPoint - refractrefractrefractN * 1e-3 : refractrefractrefractPoint + refractrefractrefractN * 1e-3;
+            Vec3f shadow_pt, shadow_N;
+            Material tmpmaterial;
+            if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
+                continue;
+
+            diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * refractrefractrefractN);
+            specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, refractrefractrefractN) * refractrefractrefractdir), refractrefractrefractMaterial.specular_exponent) * lights[i].intensity;
+        }
+        refractrefractrefractColor = refractrefractrefractMaterial.diffuse_color * diffuse_light_intensity * refractrefractrefractMaterial.albedo[0] +
+                                     Vec3f(1., 1., 1.) * specular_light_intensity * refractrefractrefractMaterial.albedo[1] +
+                                     refractrefractrefractreflectColor * refractrefractrefractMaterial.albedo[2] +
+                                     refractrefractrefractrefractColor * refractrefractrefractMaterial.albedo[3];
+    }
 
 ///////////////////////////////////////////// Node 6 /////////////////////////////////////////////
 
-    diffuse_light_intensity = 0, specular_light_intensity = 0;
-    for (size_t i = 0; i < lights.size(); i++) {
-        Vec3f light_dir = (lights[i].position - refractrefractPoint).normalize();
-        float light_distance = (lights[i].position - refractrefractPoint).norm();
+    if(!(refractrefractColor[0] == background[0] && refractrefractColor[1] == background[1] && refractrefractColor[2] == background[2])) {
+        float diffuse_light_intensity = 0, specular_light_intensity = 0;
+        for (size_t i = 0; i < lights.size(); i++) {
+            Vec3f light_dir = (lights[i].position - refractrefractPoint).normalize();
+            float light_distance = (lights[i].position - refractrefractPoint).norm();
 
-        Vec3f shadow_orig = light_dir * refractrefractN < 0 ? refractrefractPoint - refractrefractN * 1e-3 : refractrefractPoint + refractrefractN * 1e-3;
-        Vec3f shadow_pt, shadow_N;
-        Material tmpmaterial;
-        if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
-            continue;
+            Vec3f shadow_orig = light_dir * refractrefractN < 0 ? refractrefractPoint - refractrefractN * 1e-3 : refractrefractPoint + refractrefractN * 1e-3;
+            Vec3f shadow_pt, shadow_N;
+            Material tmpmaterial;
+            if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
+                continue;
 
-        diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * refractrefractN);
-        specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, refractrefractN) * refractrefractdir), refractrefractMaterial.specular_exponent) * lights[i].intensity;
+            diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * refractrefractN);
+            specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, refractrefractN) * refractrefractdir), refractrefractMaterial.specular_exponent) * lights[i].intensity;
+        }
+        refractrefractColor = refractrefractMaterial.diffuse_color * diffuse_light_intensity * refractrefractMaterial.albedo[0] +
+                              Vec3f(1., 1., 1.) * specular_light_intensity * refractrefractMaterial.albedo[1] +
+                              refractrefractreflectColor * refractrefractMaterial.albedo[2] +
+                              refractrefractrefractColor * refractrefractMaterial.albedo[3];
     }
-    refractrefractColor = refractrefractMaterial.diffuse_color * diffuse_light_intensity * refractrefractMaterial.albedo[0] +
-                          Vec3f(1., 1., 1.) * specular_light_intensity * refractrefractMaterial.albedo[1] +
-                          refractrefractreflectColor * refractrefractMaterial.albedo[2] +
-                          refractrefractrefractColor * refractrefractMaterial.albedo[3];
 
 ///////////////////////////////////////////// Node 2 /////////////////////////////////////////////
 
-    diffuse_light_intensity = 0, specular_light_intensity = 0;
-    for (size_t i = 0; i < lights.size(); i++) {
-        Vec3f light_dir = (lights[i].position - refractPoint).normalize();
-        float light_distance = (lights[i].position - refractPoint).norm();
+    if(!(refractColor[0] == background[0] && refractColor[1] == background[1] && refractColor[2] == background[2])) {
+        float diffuse_light_intensity = 0, specular_light_intensity = 0;
+        for (size_t i = 0; i < lights.size(); i++) {
+            Vec3f light_dir = (lights[i].position - refractPoint).normalize();
+            float light_distance = (lights[i].position - refractPoint).norm();
 
-        Vec3f shadow_orig = light_dir * refractN < 0 ? refractPoint - refractN * 1e-3 : refractPoint + refractN * 1e-3;
-        Vec3f shadow_pt, shadow_N;
-        Material tmpmaterial;
-        if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
-            continue;
+            Vec3f shadow_orig = light_dir * refractN < 0 ? refractPoint - refractN * 1e-3 : refractPoint + refractN * 1e-3;
+            Vec3f shadow_pt, shadow_N;
+            Material tmpmaterial;
+            if (scene_intersect(shadow_orig, light_dir, spheres, shadow_pt, shadow_N, tmpmaterial) && (shadow_pt - shadow_orig).norm() < light_distance)
+                continue;
 
-        diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * refractN);
-        specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, refractN) * refractdir), refractMaterial.specular_exponent) * lights[i].intensity;
+            diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * refractN);
+            specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, refractN) * refractdir), refractMaterial.specular_exponent) * lights[i].intensity;
+        }
+        refractColor = refractMaterial.diffuse_color * diffuse_light_intensity * refractMaterial.albedo[0] +
+                       Vec3f(1., 1., 1.) * specular_light_intensity * refractMaterial.albedo[1] +
+                       refractreflectColor * refractMaterial.albedo[2] +
+                       refractrefractColor * refractMaterial.albedo[3];
     }
-    refractColor = refractMaterial.diffuse_color * diffuse_light_intensity * refractMaterial.albedo[0] +
-                   Vec3f(1., 1., 1.) * specular_light_intensity * refractMaterial.albedo[1] +
-                   refractreflectColor * refractMaterial.albedo[2] +
-                   refractrefractColor * refractMaterial.albedo[3];
 
 ///////////////////////////////////////////// Node 0 /////////////////////////////////////////////
 
-    diffuse_light_intensity = 0, specular_light_intensity = 0;
+    float diffuse_light_intensity = 0, specular_light_intensity = 0;
     for (size_t i = 0; i < lights.size(); i++) {
         Vec3f light_dir = (lights[i].position - basePoint).normalize();
         float light_distance = (lights[i].position - basePoint).norm();
@@ -374,6 +722,7 @@ Vec3f cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &s
 }
 
 
+
 void render(const std::vector<Sphere> &spheres, const std::vector<Light> &lights) {
     const int width    = 1024;
     const int height   = 768;
@@ -381,20 +730,22 @@ void render(const std::vector<Sphere> &spheres, const std::vector<Light> &lights
     std::vector<Vec3f> framebuffer(width*height);
 
 //    #pragma omp parallel for
+    //std::ofstream myfile("blackdot.txt");
     for (size_t j = 0; j<height; j++) {
         for (size_t i = 0; i<width; i++) {
             float x =  (2*(i + 0.5)/(float)width  - 1)*tan(fov/2.)*width/(float)height;
             float y = -(2*(j + 0.5)/(float)height - 1)*tan(fov/2.);
             Vec3f dir = Vec3f(x, y, -1).normalize();
-            framebuffer[i + j * width] = cast_ray(Vec3f(0, 0, 0), dir, spheres, lights, 0);
+            framebuffer[i + j * width] = cast_ray(i, j, Vec3f(0, 0, 0), dir, spheres, lights, 0);
 //            if (framebuffer[i + j * width][0] == 0 && framebuffer[i + j * width][1] == 0 && framebuffer[i + j * width][2] == 0) {
-//                cout << j << " " << i << "\n";
+//                myfile << j << " " << i << "\n";
 //            }
         }
     }
+    //myfile.close();
 
     std::ofstream ofs;
-    ofs.open("./attemptDepth2.ppm", std::ofstream::out | std::ofstream::binary);
+    ofs.open("./attemptDepth3.ppm", std::ofstream::out | std::ofstream::binary);
     ofs << "P6\n" << width << " " << height << "\n255\n";
 
     for (size_t i = 0; i < height*width; ++i) {

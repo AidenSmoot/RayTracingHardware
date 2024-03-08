@@ -530,3 +530,183 @@ Run Build Command(s):C:/Program Files/JetBrains/CLion 2023.1.3/bin/ninja/win/x64
 Source file was:
 int main() { return 0; }
 
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-hdxjmi
+
+Run Build Command(s):C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/ninja/win/x64/ninja.exe cmTC_581a3 && [1/2] Building CXX object CMakeFiles/cmTC_581a3.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_581a3.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-uzxe9j
+
+Run Build Command(s):C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/ninja/win/x64/ninja.exe cmTC_350b5 && [1/2] Building CXX object CMakeFiles/cmTC_350b5.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_350b5.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-04afe2
+
+Run Build Command(s):C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/ninja/win/x64/ninja.exe cmTC_af430 && [1/2] Building CXX object CMakeFiles/cmTC_af430.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_af430.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-mdzoxx
+
+Run Build Command(s):C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/ninja/win/x64/ninja.exe cmTC_c9b4e && [1/2] Building CXX object CMakeFiles/cmTC_c9b4e.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_c9b4e.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-1y20fo
+
+Run Build Command(s):C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/ninja/win/x64/ninja.exe cmTC_6fdc5 && [1/2] Building CXX object CMakeFiles/cmTC_6fdc5.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_6fdc5.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-kk84y4
+
+Run Build Command(s):C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/ninja/win/x64/ninja.exe cmTC_714b8 && [1/2] Building CXX object CMakeFiles/cmTC_714b8.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_714b8.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-1g34qy
+
+Run Build Command(s):C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/ninja/win/x64/ninja.exe cmTC_274aa && [1/2] Building CXX object CMakeFiles/cmTC_274aa.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_274aa.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-39fdnx
+
+Run Build Command(s):C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/ninja/win/x64/ninja.exe cmTC_e73cb && [1/2] Building CXX object CMakeFiles/cmTC_e73cb.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_e73cb.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-hwkkuh
+
+Run Build Command(s):C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/ninja/win/x64/ninja.exe cmTC_25d22 && [1/2] Building CXX object CMakeFiles/cmTC_25d22.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_25d22.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-65oy3b
+
+Run Build Command(s):C:/Program Files/JetBrains/CLion 2023.1.3/bin/ninja/win/x64/ninja.exe cmTC_f015f && [1/2] Building CXX object CMakeFiles/cmTC_f015f.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_f015f.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-2l6hzj
+
+Run Build Command(s):C:/Program Files/JetBrains/CLion 2023.1.3/bin/ninja/win/x64/ninja.exe cmTC_98ff0 && [1/2] Building CXX object CMakeFiles/cmTC_98ff0.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_98ff0.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-u5loda
+
+Run Build Command(s):C:/Program Files/JetBrains/CLion 2023.1.3/bin/ninja/win/x64/ninja.exe cmTC_623a3 && [1/2] Building CXX object CMakeFiles/cmTC_623a3.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_623a3.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-tnejyd
+
+Run Build Command(s):C:/Program Files/JetBrains/CLion 2023.1.3/bin/ninja/win/x64/ninja.exe cmTC_4f0c6 && [1/2] Building CXX object CMakeFiles/cmTC_4f0c6.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_4f0c6.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-b79p2g
+
+Run Build Command(s):C:/Program Files/JetBrains/CLion 2023.1.3/bin/ninja/win/x64/ninja.exe cmTC_71009 && [1/2] Building CXX object CMakeFiles/cmTC_71009.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_71009.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-z60v15
+
+Run Build Command(s):C:/Program Files/JetBrains/CLion 2023.1.3/bin/ninja/win/x64/ninja.exe cmTC_48625 && [1/2] Building CXX object CMakeFiles/cmTC_48625.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_48625.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-dhl1px
+
+Run Build Command(s):C:/Program Files/JetBrains/CLion 2023.1.3/bin/ninja/win/x64/ninja.exe cmTC_20013 && [1/2] Building CXX object CMakeFiles/cmTC_20013.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_20013.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-0304zi
+
+Run Build Command(s):C:/Program Files/JetBrains/CLion 2023.1.3/bin/ninja/win/x64/ninja.exe cmTC_58ba8 && [1/2] Building CXX object CMakeFiles/cmTC_58ba8.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_58ba8.exe
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: C:/Users/aiden/School/Student/Masters/tinyRayTracer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-lxaff8
+
+Run Build Command(s):C:/Program Files/JetBrains/CLion 2023.1.3/bin/ninja/win/x64/ninja.exe cmTC_c5556 && [1/2] Building CXX object CMakeFiles/cmTC_c5556.dir/src.cxx.obj
+[2/2] Linking CXX executable cmTC_c5556.exe
+
+
+Source file was:
+int main() { return 0; }
+
