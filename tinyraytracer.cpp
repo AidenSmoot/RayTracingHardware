@@ -86,7 +86,7 @@ bool scene_intersect(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphe
     return std::min(spheres_dist, checkerboard_dist)<1000;
 }
 
-Vec3f cast_ray(size_t k, size_t j, const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &spheres, const std::vector<Light> &lights, size_t depth=0) {
+Vec3f cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &spheres, const std::vector<Light> &lights) {
     Vec3f background = Vec3f (.2,.7,.8);
 
 ///////////////////////////////////////////// Node 0 /////////////////////////////////////////////
@@ -724,22 +724,18 @@ Vec3f cast_ray(size_t k, size_t j, const Vec3f &orig, const Vec3f &dir, const st
 
 
 void render(const std::vector<Sphere> &spheres, const std::vector<Light> &lights) {
-    const int width    = 1024;
-    const int height   = 768;
-    const int fov      = 1.05;
-    std::vector<Vec3f> framebuffer(width*height);
+    const int width = 1024;
+    const int height = 768;
+    const int fov = 1;
+    std::vector<Vec3f> framebuffer(width * height);
 
 //    #pragma omp parallel for
-    //std::ofstream myfile("blackdot.txt");
-    for (size_t j = 0; j<height; j++) {
-        for (size_t i = 0; i<width; i++) {
-            float x =  (2*(i + 0.5)/(float)width  - 1)*tan(fov/2.)*width/(float)height;
-            float y = -(2*(j + 0.5)/(float)height - 1)*tan(fov/2.);
+    for (size_t j = 0; j < height; j++) {
+        for (size_t i = 0; i < width; i++) {
+            float x = (2 * (i + 0.5) / (float) width - 1) * tan(fov / 2.) * width / (float) height;
+            float y = -(2 * (j + 0.5) / (float) height - 1) * tan(fov / 2.);
             Vec3f dir = Vec3f(x, y, -1).normalize();
-            framebuffer[i + j * width] = cast_ray(i, j, Vec3f(0, 0, 0), dir, spheres, lights, 0);
-//            if (framebuffer[i + j * width][0] == 0 && framebuffer[i + j * width][1] == 0 && framebuffer[i + j * width][2] == 0) {
-//                myfile << j << " " << i << "\n";
-//            }
+            framebuffer[i + j * width] = cast_ray(Vec3f(0, 0, 0), dir, spheres, lights);
         }
     }
     //myfile.close();
@@ -748,35 +744,36 @@ void render(const std::vector<Sphere> &spheres, const std::vector<Light> &lights
     ofs.open("./attemptDepth3.ppm", std::ofstream::out | std::ofstream::binary);
     ofs << "P6\n" << width << " " << height << "\n255\n";
 
-    for (size_t i = 0; i < height*width; ++i) {
+    for (size_t i = 0; i < height * width; ++i) {
         Vec3f &c = framebuffer[i];
         float max = std::max(c[0], std::max(c[1], c[2]));
-        if (max>1) c = c*(1./max);
-        for (size_t j = 0; j<3; j++) {
-            ofs << (char)(255 * std::max(0.f, std::min(1.f, framebuffer[i][j])));
+        if (max > 1) c = c * (1. / max);
+        for (size_t j = 0; j < 3; j++) {
+            ofs << (char) (255 * std::max(0.f, std::min(1.f, framebuffer[i][j])));
         }
     }
     ofs.close();
 }
 
-int main() {
-    Material      ivory(1.0, Vec4f(0.6,  0.3, 0.1, 0.0), Vec3f(0.4, 0.4, 0.3),   50.);
-    Material      glass(1.5, Vec4f(0.0,  0.5, 0.1, 0.8), Vec3f(0.6, 0.7, 0.8),  125.);
-    Material red_rubber(1.0, Vec4f(0.9,  0.1, 0.0, 0.0), Vec3f(0.3, 0.1, 0.1),   10.);
-    Material     mirror(1.0, Vec4f(0.0, 10.0, 0.8, 0.0), Vec3f(1.0, 1.0, 1.0), 1425.);
+    int main() {
+        Material      ivory(1.0, Vec4f(0.6,  0.3, 0.1, 0.0), Vec3f(0.4, 0.4, 0.3),   50.);
+        Material      glass(1.5, Vec4f(0.0,  0.5, 0.1, 0.8), Vec3f(0.6, 0.7, 0.8),  125.);
+        Material red_rubber(1.0, Vec4f(0.9,  0.1, 0.0, 0.0), Vec3f(0.3, 0.1, 0.1),   10.);
+        Material     mirror(1.0, Vec4f(0.0, 10.0, 0.8, 0.0), Vec3f(1.0, 1.0, 1.0), 1425.);
 
-    std::vector<Sphere> spheres;
-    spheres.push_back(Sphere(Vec3f(-3,    0,   -16), 2,      ivory));
-    spheres.push_back(Sphere(Vec3f(-1.0, -1.5, -12), 2,      glass));
-    spheres.push_back(Sphere(Vec3f( 1.5, -0.5, -18), 3, red_rubber));
-    spheres.push_back(Sphere(Vec3f( 7,    5,   -18), 4,     mirror));
+        std::vector<Sphere> spheres;
+        spheres.push_back(Sphere(Vec3f(-3,    0,   -16), 2,      ivory));
+        spheres.push_back(Sphere(Vec3f(-1.0, -1.5, -12), 2,      glass));
+        spheres.push_back(Sphere(Vec3f( 1.5, -0.5, -18), 3, red_rubber));
+        spheres.push_back(Sphere(Vec3f( 7,    5,   -18), 4,     mirror));
 
-    std::vector<Light>  lights;
-    lights.push_back(Light(Vec3f(-20, 20,  20), 1.5));
-    lights.push_back(Light(Vec3f( 30, 50, -25), 1.8));
-    lights.push_back(Light(Vec3f( 30, 20,  30), 1.7));
+        std::vector<Light>  lights;
+        lights.push_back(Light(Vec3f(-20, 20,  20), 1.5));
+        lights.push_back(Light(Vec3f( 30, 50, -25), 1.8));
+        lights.push_back(Light(Vec3f( 30, 20,  30), 1.7));
 
-    render(spheres, lights);
+        render(spheres, lights);
 
-    return 0;
-}
+        return 0;
+    }
+    
